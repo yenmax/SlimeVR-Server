@@ -1,9 +1,6 @@
-package dev.slimevr.gui.items.skeleton;
+package dev.slimevr.gui.items.config;
 
 import io.eiren.util.StringUtils;
-import io.eiren.util.logging.LogManager;
-import dev.slimevr.VRServer;
-import dev.slimevr.vr.processor.skeleton.SkeletonConfigValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -12,18 +9,21 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class SkeletonConfigItemView extends HBox  implements Initializable{
+public class AdjustValueItemView extends HBox implements Initializable {
+
+	public interface AdjustValueItemListener {
+		void change(float diff);
+		void reset();
+	}
 
 	@FXML
 	private ResourceBundle resources;
-
 
 	@FXML
 	private Button itemMinusButton;
@@ -40,21 +40,22 @@ public class SkeletonConfigItemView extends HBox  implements Initializable{
 	@FXML
 	private Label itemTitle;
 
-	private SkeletonConfigValue joint;
-	private float value;
-	private final VRServer server;
-	private final SkeletonConfigItemListener itemListener;
 	private ResourceBundle bundle;
 
+	private String title;
+	private float value;
+	private float adjAmount;
 
-	public SkeletonConfigItemView(VRServer server, SkeletonConfigValue joint, SkeletonConfigItemListener itemListener) {
+	private AdjustValueItemListener eventListener;
 
-		this.server = server;
-		this.itemListener = itemListener;
-		this.joint = joint;
-		this.value = server.humanPoseProcessor.getSkeletonConfig(joint);
+	public AdjustValueItemView(String title, float value, float adjAmount, AdjustValueItemListener eventListener) {
+		this.title = title;
+		this.value = value;
+		this.adjAmount = adjAmount;
 
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cells/skeleton/skeletonConfigItemView.fxml"));
+		this.eventListener = eventListener;
+
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cells/config/adjustValueItemView.fxml"));
 		fxmlLoader.setResources(ResourceBundle.getBundle("localization_files/LangBundle", new Locale("en", "EN")));
 		fxmlLoader.setRoot(this);
 		fxmlLoader.setController(this);
@@ -63,21 +64,19 @@ public class SkeletonConfigItemView extends HBox  implements Initializable{
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-
-
 	}
 
 	@FXML
 	public void initialize() {
-		LogManager.log.debug("initialize "+joint+" "+bundle.getString(joint.configKey)+" "+value);
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		bundle = resources;
-		LogManager.log.debug("initialize "+joint+" "+bundle.getString(joint.configKey)+" "+value);
-		itemTitle.setText(bundle.getString(joint.configKey));
+
+		itemTitle.setText(title);
 		setItemValueText(value);
+
 		itemResetButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -88,50 +87,36 @@ public class SkeletonConfigItemView extends HBox  implements Initializable{
 		itemPlusButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				change(0.01f);
+				change(adjAmount);
 			}
 		});
+
 		itemMinusButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				change(-0.01f);
+				change(-adjAmount);
 			}
 		});
 	}
 
 	private void change(float diff) {
-		itemListener.change(joint, diff);
+		eventListener.change(diff);
 	}
 
 	private void reset() {
-		itemListener.reset(joint);
+		eventListener.reset();
 	}
-
 
 	private void setItemValueText(float value) {
 		itemValue.setText(StringUtils.prettyNumber(value * 100, 0));
 	}
 
-
-	public void refreshJoint(float value) {
-		this.value = value;
-		setItemValueText(value);
-	}
-
-
-
-
-	public interface SkeletonConfigItemListener {
-		void change(SkeletonConfigValue joint, float diff);
-
-		void reset(SkeletonConfigValue joint);
-	}
-
-	public SkeletonConfigValue getJoint() {
-		return joint;
-	}
-
 	public float getValue() {
 		return value;
+	}
+
+	public void setValue(float value) {
+		this.value = value;
+		setItemValueText(value);
 	}
 }
