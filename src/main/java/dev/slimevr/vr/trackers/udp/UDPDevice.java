@@ -1,6 +1,7 @@
 package dev.slimevr.vr.trackers.udp;
 
 import dev.slimevr.NetworkProtocol;
+import dev.slimevr.vr.BoardType;
 import dev.slimevr.vr.Device;
 import dev.slimevr.vr.trackers.IMUTracker;
 import dev.slimevr.vr.trackers.Tracker;
@@ -26,9 +27,13 @@ public class UDPDevice extends Device {
 	public NetworkProtocol protocol = null;
 	public int firmwareBuild = 0;
 	public boolean timedOut = false;
+	public BoardType boardType = BoardType.UNKNOWN;
 	private final FastList<Tracker> trackers = new FastList<>();
 
-	public UDPDevice(SocketAddress address, InetAddress ipAddress) {
+	public UDPDevice(
+		SocketAddress address,
+		InetAddress ipAddress
+	) {
 		this.address = address;
 		this.ipAddress = ipAddress;
 		this.id = UDPDevice.nextLocalDeviceId.incrementAndGet();
@@ -74,6 +79,15 @@ public class UDPDevice extends Device {
 	@Override
 	public InetAddress getIpAddress() {
 		return this.ipAddress;
+	}
+
+	public void setBoardType(BoardType boardType) {
+		this.boardType = boardType;
+	}
+
+	@Override
+	public BoardType getBoardType() {
+		return this.boardType;
 	}
 
 	@Override

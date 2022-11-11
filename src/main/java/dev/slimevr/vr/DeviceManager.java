@@ -2,6 +2,12 @@ package dev.slimevr.vr;
 
 import dev.slimevr.VRServer;
 import io.eiren.util.collections.FastList;
+import org.kohsuke.github.GHCommit;
+import org.kohsuke.github.GHRelease;
+import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GitHub;
+
+import java.io.IOException;
 
 
 public class DeviceManager {
@@ -31,6 +37,31 @@ public class DeviceManager {
 	public void addDevice(Device device) {
 		this.server.queueTask(() -> {
 			this.devices.add(device);
+			try {
+				this.canUpdateDevice(device);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		});
+	}
+
+	public void updateDeviceFirmware(Device device) {
+
+	}
+
+	public boolean canUpdateDevice(Device device) throws IOException {
+
+		GitHub gitHub = GitHub.connectAnonymously();
+		GHRepository repository = gitHub
+			.getUser("SlimeVR")
+			.getRepository("SlimeVR-Tracker-ESP");
+		GHRelease release = repository
+			.getLatestRelease();
+		GHCommit commit = repository.getCommit(release.getTagName());
+//		repository
+//			.listArtifacts()
+//			.withPageSize(1)
+//			.forEach((a) -> System.out.println(a.getName()));
+		return device.getBoardType() == BoardType.BOARD_SLIMEVR;
 	}
 }

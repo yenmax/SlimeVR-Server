@@ -13,6 +13,7 @@ public class Device {
 
 	private final int id;
 	private String customName;
+	private BoardType boardType;
 	private String firmwareVersion;
 	private String manufacturer;
 
@@ -46,12 +47,20 @@ public class Device {
 		return this.firmwareVersion;
 	}
 
+	public void setBoardType(BoardType boardType) {
+		this.boardType = boardType;
+	}
+
 	public void setFirmwareVersion(String firmwareVersion) {
 		this.firmwareVersion = firmwareVersion;
 	}
 
 	public String getCustomName() {
 		return this.customName;
+	}
+
+	public BoardType getBoardType() {
+		return this.boardType;
 	}
 
 	public InetAddress getIpAddress() {

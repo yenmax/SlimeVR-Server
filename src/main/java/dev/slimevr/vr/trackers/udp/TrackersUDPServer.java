@@ -5,6 +5,7 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import dev.slimevr.Main;
 import dev.slimevr.NetworkProtocol;
+import dev.slimevr.vr.BoardType;
 import dev.slimevr.vr.trackers.IMUTracker;
 import dev.slimevr.vr.trackers.ReferenceAdjustedTracker;
 import dev.slimevr.vr.trackers.Tracker;
@@ -12,7 +13,6 @@ import dev.slimevr.vr.trackers.TrackerStatus;
 import io.eiren.util.Util;
 import io.eiren.util.collections.FastList;
 import io.eiren.util.logging.LogManager;
-
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.IOException;
@@ -122,7 +122,13 @@ public class TrackersUDPServer extends Thread {
 			connection = connectionsByAddress.get(addr);
 		}
 		if (connection == null) {
-			connection = new UDPDevice(handshakePacket.getSocketAddress(), addr);
+			connection = new UDPDevice(
+				handshakePacket.getSocketAddress(),
+				addr
+			);
+			connection.setBoardType(BoardType.getBoardType(handshake.boardType));
+
+
 			Main.vrServer.getDeviceManager().addDevice(connection);
 			connection.firmwareBuild = handshake.firmwareBuild;
 			if (handshake.firmware == null || handshake.firmware.length() == 0) {
