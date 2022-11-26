@@ -30,7 +30,6 @@ export function HomePage() {
         className="absolute bg-accent-background-50 w-full rounded-full"
         style={{
           bottom: 'calc(-300vw / 1.04)',
-          height: '300vw',
           width: '300vw',
         }}
       ></div>
