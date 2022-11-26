@@ -87,7 +87,7 @@ export function Button({
       'focus:ring-4 text-center relative',
       {
         'rounded-full p-2 text-center min-h-[35px] min-w-[35px]': rounded,
-        'rounded-md px-5 py-2.5': !rounded,
+        'rounded-md px-3 xs:px-5 py-2 xs:py-2.5': !rounded,
       },
       props.className
     );
