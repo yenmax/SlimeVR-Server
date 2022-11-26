@@ -122,51 +122,60 @@ export function ConnectTrackersPage() {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="flex gap-10 w-full max-w-7xl ">
-        <div className="flex flex-col w-full max-w-sm">
-          <ArrowLink to="/onboarding/wifi-creds">
-            Go Back to WiFi credentials
-          </ArrowLink>
-          <Typography variant="main-title">Connect trackers</Typography>
-          <Typography color="secondary">
-            Now onto the fun part, connecting all the trackers!
-          </Typography>
-          <Typography color="secondary">
-            Simply connect all that aren't connected yet, through a USB port.
-          </Typography>
-          <div className="flex flex-col gap-2 py-5">
-            {/* <ArrowLink
+      <div className="flex-1 flex flex-col xs:flex-row gap-4 xs:gap-10 w-full max-w-7xl">
+        <div className="flex flex-col w-full items-center xs:items-start xs:max-w-sm">
+          <div>
+            <ArrowLink to="/onboarding/wifi-creds">
+              Go Back to WiFi credentials
+            </ArrowLink>
+            <Typography variant="main-title">Connect trackers</Typography>
+            <Typography color="secondary">
+              Now onto the fun part, connecting all the trackers!
+            </Typography>
+            <Typography color="secondary">
+              Simply connect all that aren't connected yet, through a USB port.
+            </Typography>
+            <div className="flex flex-col gap-2 py-5">
+              {/* <ArrowLink
               to="/onboarding/connect"
               direction="right"
               variant="boxed"
             >
               I have other types of trackers
             </ArrowLink> */}
-            <ArrowLink to="/settings/serial" direction="right" variant="boxed">
-              I'm having trouble connecting!
-            </ArrowLink>
-          </div>
-          <TipBox>
-            Not sure which tracker is which? Shake a tracker and it will
-            highlight the corresponding item.
-          </TipBox>
-
-          <div
-            className={classNames(
-              'rounded-xl bg-background-70 h-16 flex gap-2 p-3 lg:w-full mt-4',
-              connectionStatus === 'ERROR' && 'border-2 border-status-critical'
-            )}
-          >
-            <div className="flex flex-col justify-center fill-background-10">
-              <LoaderIcon
-                youSpinMeRightRoundBabyRightRound={connectionStatus !== 'ERROR'}
-              ></LoaderIcon>
+              <ArrowLink
+                to="/settings/serial"
+                direction="right"
+                variant="boxed"
+              >
+                I'm having trouble connecting!
+              </ArrowLink>
             </div>
-            <div className="flex flex-col">
-              <Typography bold>USB Tracker</Typography>
-              <Typography color="secondary">
-                {statusLabelMap[connectionStatus]}
-              </Typography>
+            <TipBox>
+              Not sure which tracker is which? Shake a tracker and it will
+              highlight the corresponding item.
+            </TipBox>
+
+            <div
+              className={classNames(
+                'rounded-xl bg-background-70 h-16 flex gap-2 p-3 lg:w-full mt-4',
+                connectionStatus === 'ERROR' &&
+                  'border-2 border-status-critical'
+              )}
+            >
+              <div className="flex flex-col justify-center fill-background-10">
+                <LoaderIcon
+                  youSpinMeRightRoundBabyRightRound={
+                    connectionStatus !== 'ERROR'
+                  }
+                ></LoaderIcon>
+              </div>
+              <div className="flex flex-col">
+                <Typography bold>USB Tracker</Typography>
+                <Typography color="secondary">
+                  {statusLabelMap[connectionStatus]}
+                </Typography>
+              </div>
             </div>
           </div>
         </div>
