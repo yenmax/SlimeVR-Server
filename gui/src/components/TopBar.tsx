@@ -1,13 +1,13 @@
+import { appWindow } from '@tauri-apps/api/window';
 import { ReactChild } from 'react';
 import { NavLink } from 'react-router-dom';
+import packagejson from '../../package.json';
 import { CloseIcon } from './commons/icon/CloseIcon';
 import { MaximiseIcon } from './commons/icon/MaximiseIcon';
 import { MinimiseIcon } from './commons/icon/MinimiseIcon';
 import { SlimeVRIcon } from './commons/icon/SimevrIcon';
-import { appWindow } from '@tauri-apps/api/window';
 import { ProgressBar } from './commons/ProgressBar';
 import { Typography } from './commons/Typography';
-import packagejson from '../../package.json';
 
 export function TopBar({
   progress,
@@ -54,7 +54,7 @@ export function TopBar({
         </div>
       </div>
       <div
-        className="flex justify-end items-center px-2 gap-2 z-50"
+        className="flex justify-end items-center px-2 gap-2 z-5 opacity-0 xs:opacity-100"
         data-tauri-drag-region
       >
         <div
