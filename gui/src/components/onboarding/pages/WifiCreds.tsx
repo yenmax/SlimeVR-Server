@@ -42,8 +42,8 @@ export function WifiCredsPage() {
       className="flex flex-col w-full h-full"
       onSubmit={handleSubmit(submitWifiCreds)}
     >
-      <div className="flex flex-col w-full h-full justify-center items-center">
-        <div className="flex gap-10">
+      <div className="flex-1 flex w-full h-full justify-center items-center">
+        <div className="flex flex-col xs:flex-row gap-10">
           <div className="flex flex-col max-w-sm">
             <ArrowLink to="/onboarding/home" direction="left">
               Go Back to introduction
@@ -72,7 +72,7 @@ export function WifiCredsPage() {
           </div>
         </div>
       </div>
-      <div className="w-full py-4 flex flex-row">
+      <div className="w-full h-fit py-4 flex flex-row">
         <div className="flex flex-grow">
           <Button variant="secondary" to="/" onClick={skipSetup}>
             Skip setup

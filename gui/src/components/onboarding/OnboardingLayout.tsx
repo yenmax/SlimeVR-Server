@@ -9,7 +9,7 @@ export function OnboardingLayout({ children }: { children: ReactChild }) {
   return !state.alonePage ? (
     <>
       <TopBar progress={state.progress}></TopBar>
-      <div className="flex-grow pt-10 mx-4 h-full">{children}</div>
+      <div className="flex-grow py-10 mx-4 h-full">{children}</div>
     </>
   ) : (
     <MainLayoutRoute widgets={false}>
