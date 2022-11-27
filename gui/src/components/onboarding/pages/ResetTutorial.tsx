@@ -19,7 +19,7 @@ export function ResetTutorialPage() {
               </ArrowLink>
               <Typography variant="main-title">
                 Reset tutorial
-                <span className="mx-2 p-1 bg-accent-background-30 text-standard rounded-md">
+                <span className="mx-2 p-1 bg-accent-background-30 text-standard rounded-md whitespace-pre">
                   Work in progress
                 </span>
               </Typography>

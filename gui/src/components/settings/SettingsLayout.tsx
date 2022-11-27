@@ -10,8 +10,8 @@ export function SettingsLayoutRoute({ children }: { children: ReactChild }) {
   return (
     <>
       <TopBar></TopBar>
-      <div ref={ref} className="flex-grow" style={{ height: layoutHeight }}>
-        <div className="flex h-full pb-3">
+      <div ref={ref} className="flex-grow">
+        <div className="flex h-full pb-3 flex-col xs:flex-row">
           <Navbar></Navbar>
           <div className="h-full w-full gap-2 flex">
             <SettingsSidebar></SettingsSidebar>

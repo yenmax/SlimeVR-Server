@@ -20,8 +20,8 @@ export function AutomaticMountingPage() {
                 </ArrowLink>
               )}
               <Typography variant="main-title">
-                Mount calibration!{' '}
-                <span className="p-1 bg-accent-background-30 text-standard rounded-md">
+                Mount calibration{' '}
+                <span className="p-1 bg-accent-background-30 text-standard rounded-md whitespace-pre">
                   Work in progress
                 </span>
               </Typography>
