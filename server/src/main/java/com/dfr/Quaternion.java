@@ -39,14 +39,15 @@ import com.jme3.math.Vector3f;
  *
  * @author Donald F Reynolds
  */
-public final class Quaternion {
-	// base functionality
+public final class Quaternion implements Cloneable {
+
+	// Base functionality
 	public float w, x, y, z;
 
-	private static final float EULER_TOL = 10000f; // approximately
-													// tan(pi/2*0.9999)
-
-	// constructors
+	// Constructors
+	/**
+	 * Creates a new identity Quaternion
+	 */
 	public Quaternion() {
 		w = 1f;
 		x = 0f;
@@ -54,18 +55,31 @@ public final class Quaternion {
 		z = 0f;
 	}
 
-	public Quaternion(float Qw, float Qx, float Qy, float Qz) {
-		w = Qw;
-		x = Qx;
-		y = Qy;
-		z = Qz;
+	/**
+	 * Creates a new Quaternion from the given components
+	 *
+	 * @param w The w value of this Quaternion
+	 * @param x The x value of this Quaternion
+	 * @param y The y value of this Quaternion
+	 * @param z The z value of this Quaternion
+	 */
+	public Quaternion(float w, float x, float y, float z) {
+		this.w = w;
+		this.x = x;
+		this.y = y;
+		this.z = z;
 	}
 
-	public Quaternion(Quaternion Q) {
-		w = Q.w;
-		x = Q.x;
-		y = Q.y;
-		z = Q.z;
+	/**
+	 * Creates a new Quaternion from the given Quaternion
+	 *
+	 * @param q The Quaternion to copy components from
+	 */
+	public Quaternion(Quaternion q) {
+		w = q.w;
+		x = q.x;
+		y = q.y;
+		z = q.z;
 	}
 
 	public static Quaternion NULL = new Quaternion(0, 0, 0, 0);
@@ -74,28 +88,89 @@ public final class Quaternion {
 	public static Quaternion J = new Quaternion(0, 0, 1, 0);
 	public static Quaternion K = new Quaternion(0, 0, 0, 1);
 
-	public Quaternion set(float Qw, float Qx, float Qy, float Qz) {
-		w = Qw;
-		x = Qx;
-		y = Qy;
-		z = Qz;
+
+	/**
+	 * Sets this Quaternion's components to the given ones
+	 *
+	 * @param w The w value to set to this Quaternion
+	 * @param x The x value to set to this Quaternion
+	 * @param y The y value to set to this Quaternion
+	 * @param z The z value to set to this Quaternion
+	 * @return Itself after the components have been set
+	 */
+	public Quaternion set(float w, float x, float y, float z) {
+		this.w = w;
+		this.x = x;
+		this.y = y;
+		this.z = z;
 
 		return this;
 	}
 
+	/**
+	 * Sets this Quaternion's components to the given Quaternion's components
+	 *
+	 * @param q The Quaternion to copy components from
+	 * @return Itself after the components have been set
+	 */
+	public Quaternion set(Quaternion q) {
+		w = q.w;
+		x = q.x;
+		y = q.y;
+		z = q.z;
+
+		return this;
+	}
+
+	/**
+	 * Clones this Quaternion and returns it as a new Quaternion
+	 *
+	 * @return The cloned Quaternion
+	 */
+	@Override
+	public Quaternion clone() {
+		try {
+			return (Quaternion) super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException(e); // Won't happen
+		}
+	}
+
 	// Basic operations
+	/**
+	 * Calculates the dot product of this Quaternion with the given Quaternion.
+	 *
+	 * @param that The given Quaternion
+	 * @return The calculated dot product
+	 */
 	public float dot(Quaternion that) {
 		return this.w * that.w + this.x * that.x + this.y * that.y + this.z * that.z;
 	}
 
+	/**
+	 * Calculates the square of the length of this Quaternion
+	 *
+	 * @return The square of the length of this Quaternion
+	 */
 	public float lenSq() {
 		return w * w + x * x + y * y + z * z;
 	}
 
+	/**
+	 * Calculates the length of this Quaternion
+	 *
+	 * @return The length of this Quaternion
+	 */
 	public float len() {
 		return (float) Math.sqrt(w * w + x * x + y * y + z * z);
 	}
 
+	/**
+	 * Sets this Quaternion to the unit Quaternion of the given Quaternion
+	 *
+	 * @param A The Quaternion to turn into a unit Quaternion
+	 * @return The Quaternion as a unit Quaternion
+	 */
 	public Quaternion unit(Quaternion A) {
 		float inv = 1f / (float) Math.sqrt(A.w * A.w + A.x * A.x + A.y * A.y + A.z * A.z);
 		w = inv * A.w;
@@ -106,6 +181,12 @@ public final class Quaternion {
 		return this;
 	}
 
+	/**
+	 * Sets this Quaternion to the negated given Quaternion
+	 *
+	 * @param A The Quaternion to copy the negated components from
+	 * @return The negated Quaternion
+	 */
 	public Quaternion neg(Quaternion A) {
 		w = -A.w;
 		x = -A.x;
@@ -115,6 +196,13 @@ public final class Quaternion {
 		return this;
 	}
 
+	/**
+	 * Sets this Quaternion to the conjugate (having an equal magnitude but
+	 * opposite rotation) of the given Quaternion
+	 *
+	 * @param A The Quaternion to calculate the conjugate from
+	 * @return The conjugate of the given Quaternion
+	 */
 	public Quaternion conj(Quaternion A) {
 		w = A.w;
 		x = -A.x;
@@ -124,6 +212,12 @@ public final class Quaternion {
 		return this;
 	}
 
+	/**
+	 * Sets this Quaternion to be the inverse of the given Quaternion
+	 *
+	 * @param A The Quaternion to set the inverse from
+	 * @return The inversed Quaternion.
+	 */
 	public Quaternion inv(Quaternion A) {
 		float inv = 1f / (A.w * A.w + A.x * A.x + A.y * A.y + A.z * A.z);
 		w = inv * A.w;
@@ -134,6 +228,14 @@ public final class Quaternion {
 		return this;
 	}
 
+	/**
+	 * Set this Quaternion to the multiplication of the given Quaternion by the
+	 * given scalar
+	 *
+	 * @param A The Quaternion to be multiplied
+	 * @param b The scalar to multiply the given Quaternion
+	 * @return The multiplied Quaternion
+	 */
 	public Quaternion mul(Quaternion A, float b) {
 		w = A.w * b;
 		x = A.x * b;
@@ -143,6 +245,14 @@ public final class Quaternion {
 		return this;
 	}
 
+	/**
+	 * Set this Quaternion to the division of the given Quaternion by the given
+	 * scalar
+	 *
+	 * @param A The Quaternion to be divided
+	 * @param b The scalar to divide the given Quaternion
+	 * @return The divided Quaternion
+	 */
 	public Quaternion div(Quaternion A, float b) {
 		w = A.w / b;
 		x = A.x / b;
@@ -152,6 +262,13 @@ public final class Quaternion {
 		return this;
 	}
 
+	/**
+	 * Sets this Quaternion to the addition of the given Quaternions
+	 *
+	 * @param A The first Quaternion
+	 * @param B The second Quaternion to be added onto the first
+	 * @return The addition of the 2 given Quaternions
+	 */
 	public Quaternion add(Quaternion A, Quaternion B) {
 		w = A.w + B.w;
 		x = A.x + B.x;
@@ -161,6 +278,13 @@ public final class Quaternion {
 		return this;
 	}
 
+	/**
+	 * Sets this Quaternion to the subtraction of the given Quaternions
+	 *
+	 * @param A The first Quaternion
+	 * @param B The second Quaternion to be subtracted from the first
+	 * @return The addition of the 2 given Quaternions
+	 */
 	public Quaternion sub(Quaternion A, Quaternion B) {
 		w = A.w - B.w;
 		x = A.x - B.x;
@@ -170,6 +294,14 @@ public final class Quaternion {
 		return this;
 	}
 
+	/**
+	 * Sets this Quaternion as the result of the multiplication of the first
+	 * given Quaternion by the second one
+	 *
+	 * @param A The first Quaternion
+	 * @param B The second Quaternion to multiply the first
+	 * @return A Quaternion representing the result of the multiplication
+	 */
 	public Quaternion mul(Quaternion A, Quaternion B) {
 		float Cw = A.w * B.w - A.x * B.x - A.y * B.y - A.z * B.z;
 		float Cx = A.x * B.w + A.w * B.x - A.z * B.y + A.y * B.z;
@@ -184,6 +316,14 @@ public final class Quaternion {
 		return this;
 	}
 
+	/**
+	 * Sets this Quaternion as the result of the multiplication of the inverse
+	 * of the first given Quaternion by the second one
+	 *
+	 * @param A The first Quaternion that will be inversed
+	 * @param B The second Quaternion to multiply with the first
+	 * @return A Quaternion representing the result of the multiplication
+	 */
 	public Quaternion invMul(Quaternion A, Quaternion B) {
 		float inv = 1f / (A.w * A.w + A.x * A.x + A.y * A.y + A.z * A.z);
 		float Cw = inv * (A.w * B.w + A.x * B.x + A.y * B.y + A.z * B.z);
@@ -199,6 +339,14 @@ public final class Quaternion {
 		return this;
 	}
 
+	/**
+	 * Sets this Quaternion as the result of the multiplication of the first
+	 * given Quaternion by the inverse of the second one
+	 *
+	 * @param A The first Quaternion that will be inversed
+	 * @param B The second Quaternion to multiply with the first
+	 * @return A Quaternion representing the result of the multiplication
+	 */
 	public Quaternion mulInv(Quaternion A, Quaternion B) {
 		float inv = 1f / (B.w * B.w + B.x * B.x + B.y * B.y + B.z * B.z);
 		float Cw = inv * (A.w * B.w + A.x * B.x + A.y * B.y + A.z * B.z);
@@ -266,8 +414,8 @@ public final class Quaternion {
 
 		float mul = (float) Math.sqrt(aLenSqInv * bLenSq);
 
-		// (b*Q*a^-1 + len(b*a^-1)*Q)/2, a and b are treated as pure imaginary
-		// quaternions
+		// (b*Q*a^-1 + len(b*a^-1)*Q)/2,
+		// a and b are treated as pure imaginary Quaternions
 		w = 0.5f * (Sw + mul * Q.w);
 		x = 0.5f * (Sx + mul * Q.x);
 		y = 0.5f * (Sy + mul * Q.y);
@@ -313,14 +461,14 @@ public final class Quaternion {
 		float s0 = (float) Math.sin((1.0f - t) * theta);
 		float s1 = (float) Math.sin(t * theta);
 
-		// compute interpolated quaternion
+		// compute interpolated Quaternion
 		float Sw = s0 * Aw + s1 * Bw;
 		float Sx = s0 * Ax + s1 * Bx;
 		float Sy = s0 * Ay + s1 * By;
 		float Sz = s0 * Az + s1 * Bz;
 
-		// compute the length of the quaternion (approximately sin(theta), but
-		// this is not robust)
+		// compute the length of the Quaternion
+		// (approximately sin(theta), but this is not robust)
 		float len = (float) Math.sqrt(Sw * Sw + Sx * Sx + Sy * Sy + Sz * Sz);
 
 		if (len > 0f) {
@@ -384,22 +532,31 @@ public final class Quaternion {
 	}
 
 	// conversion from
+	/**
+	 * Sets this to a random unit Quaternion from the 4 given random floats.
+	 *
+	 * @param r0 First random float
+	 * @param r1 Second random float
+	 * @param r2 Third random float
+	 * @param r3 Fourth random float
+	 * @return A random Quaternion from the 4 given random floats
+	 */
 	public Quaternion setFromRandom(float r0, float r1, float r2, float r3) {
 		if (r0 == 0f && r1 == 0f) {
-			w = 1;
-			x = 0;
-			y = 0;
-			z = 0;
+			w = 1f;
+			x = 0f;
+			y = 0f;
+			z = 0f;
 			return this;
 		}
 		float l0 = (float) Math.log(1f - r0);
 		float l1 = (float) Math.log(1f - r1);
 		float m0 = (float) Math.sqrt(l0 / (l0 + l1));
 		float m1 = (float) Math.sqrt(l1 / (l0 + l1));
-		float c2 = (float) Math.cos(6.2831853f * r2);
-		float c3 = (float) Math.cos(6.2831853f * r3);
-		float s2 = (float) Math.sin(6.2831853f * r2);
-		float s3 = (float) Math.sin(6.2831853f * r3);
+		float c2 = (float) Math.cos(2 * Math.PI * r2);
+		float c3 = (float) Math.cos(2 * Math.PI * r3);
+		float s2 = (float) Math.sin(2 * Math.PI * r2);
+		float s3 = (float) Math.sin(2 * Math.PI * r3);
 
 		w = m0 * c2;
 		x = m0 * s2;
@@ -473,10 +630,11 @@ public final class Quaternion {
 	public Quaternion setFromAngleAxis(float ang, float ax, float ay, float az) {
 		float len = (float) Math.sqrt(ax * ax + ay * ay + az * az);
 		if (len == 0f) {
-			w = 1f; // technically not defined but sure
+			w = 1f;
 			x = 0f;
 			y = 0f;
 			z = 0f;
+			return this;
 		}
 
 		float cos = (float) Math.cos(0.5f * ang);
@@ -669,6 +827,9 @@ public final class Quaternion {
 
 		return ang;
 	}
+
+	private static final float EULER_TOL = 10000f; // approximately
+													// tan(pi/2*0.9999)
 
 	public float[] toEulerXYZ(float[] output) {
 		float zz = w * w - x * x - y * y + z * z;
@@ -928,9 +1089,9 @@ public final class Quaternion {
 
 	// immutable conversion shorthand
 	// calls of the form:
-	// !Quaternion result = quaternion.toF(new !Quaternion);
+	// !Quaternion result = Quaternion.toF(new !Quaternion);
 	// become
-	// !Quaternion result = quaternion.toF();
+	// !Quaternion result = Quaternion.toF();
 	public Matrix3f toRotationMatrix() {
 		return this.toRotationMatrix(new Matrix3f());
 	}
