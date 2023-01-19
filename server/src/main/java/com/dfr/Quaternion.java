@@ -317,8 +317,9 @@ public final class Quaternion implements Cloneable {
 	}
 
 	/**
-	 * Sets this Quaternion as the result of the multiplication of the inverse
-	 * of the first given Quaternion by the second one
+	 * Sets this to 1/A * B, that being setting this to the result of the
+	 * multiplication of the inverse of the first given Quaternion by the second
+	 * one
 	 *
 	 * @param A The first Quaternion that will be inversed
 	 * @param B The second Quaternion to multiply with the first
@@ -340,11 +341,13 @@ public final class Quaternion implements Cloneable {
 	}
 
 	/**
-	 * Sets this Quaternion as the result of the multiplication of the first
-	 * given Quaternion by the inverse of the second one
+	 * Sets this to A * 1/B, that being setting this to the result of the
+	 * multiplication of the first given Quaternion by the inverse of the second
+	 * one
 	 *
-	 * @param A The first Quaternion that will be inversed
-	 * @param B The second Quaternion to multiply with the first
+	 * @param A The first Quaternion
+	 * @param B The second Quaternion that will be inversed and multiplied with
+	 * the first
 	 * @return A Quaternion representing the result of the multiplication
 	 */
 	public Quaternion mulInv(Quaternion A, Quaternion B) {
@@ -380,12 +383,36 @@ public final class Quaternion implements Cloneable {
 		return this.unit(this.project(Q, ax, ay, az));
 	}
 
+	/**
+	 * Returns the Quaternion space angle for the given axis
+	 *
+	 * @param ax The x component of the axis
+	 * @param ay The y component of the axis
+	 * @param az The z component of the axis
+	 * @return The Quaternion space angle for the given axis
+	 */
 	public float projectedAngle(float ax, float ay, float az) {
 		float aLen = (float) Math.sqrt(ax * ax + ay * ay + az * az);
 		float aDotQ = x * ax + y * ay + z * az;
 
 		float ang = (float) Math.atan2(aDotQ, w * aLen);
 		return ang;
+	}
+
+	/**
+	 * Returns the rotation space angle for the given axis
+	 *
+	 * @param ax The x component of the axis
+	 * @param ay The y component of the axis
+	 * @param az The z component of the axis
+	 * @return The rotation space angle for the given axis
+	 */
+	public float projectedAngleR(float ax, float ay, float az) {
+		float aLen = (float) Math.sqrt(ax * ax + ay * ay + az * az);
+		float aDotQ = x * ax + y * ay + z * az;
+
+		float ang = 2f * (float) Math.atan2(aDotQ, w * aLen);
+		return (float) ((ang + Math.PI) % (2 * Math.PI) - Math.PI);
 	}
 
 	public Quaternion align(
@@ -1235,99 +1262,6 @@ public final class Quaternion implements Cloneable {
 
 	public Quaternion slerpNearest(Quaternion that, float t) {
 		return new Quaternion().slerpNearest(this, that, t);
-	}
-
-
-	// static shorthand
-	// calls of the form:
-	// Quaternion result = new Quaternion().setF(!Quaternion ...);
-	// become
-	// Quaternion result = Quaternion.f(!Quaternion ...);
-	public static Quaternion fromRandom(float r0, float r1, float r2, float r3) {
-		return new Quaternion().setFromRandom(r0, r1, r2, r3);
-	}
-
-	public static Quaternion fromRotationMatrix(
-		float xx,
-		float yx,
-		float zx,
-		float xy,
-		float yy,
-		float zy,
-		float xz,
-		float yz,
-		float zz
-	) {
-		return new Quaternion().setFromRotationMatrix(xx, yx, zx, xy, yy, zy, xz, yz, zz);
-	};
-
-	public static Quaternion fromRotationVector(float rx, float ry, float rz) {
-		return new Quaternion().setFromRotationVector(rx, ry, rz);
-	}
-
-	public static Quaternion fromAngleAxis(float ang, float ax, float ay, float az) {
-		return new Quaternion().setFromAngleAxis(ang, ax, ay, az);
-	}
-
-	public static Quaternion fromEulerXYZ(float X, float Y, float Z) {
-		return new Quaternion().setFromEulerXYZ(X, Y, Z);
-	}
-
-	public static Quaternion fromEulerXZY(float X, float Z, float Y) {
-		return new Quaternion().setFromEulerXZY(X, Z, Y);
-	}
-
-	public static Quaternion fromEulerYXZ(float Y, float X, float Z) {
-		return new Quaternion().setFromEulerYXZ(Y, X, Z);
-	}
-
-	public static Quaternion fromEulerYZX(float Y, float Z, float X) {
-		return new Quaternion().setFromEulerYZX(Y, Z, X);
-	}
-
-	public static Quaternion fromEulerZXY(float Z, float X, float Y) {
-		return new Quaternion().setFromEulerZXY(Z, X, Y);
-	}
-
-	public static Quaternion fromEulerZYX(float Z, float Y, float X) {
-		return new Quaternion().setFromEulerZYX(Z, Y, X);
-	}
-
-	// immutable shorthand alt arguments
-	public static Quaternion fromRotationMatrix(Matrix3f matrix) {
-		return new Quaternion().setFromRotationMatrix(matrix);
-	}
-
-	public static Quaternion fromRotationVector(Vector3f vector) {
-		return new Quaternion().setFromRotationVector(vector);
-	}
-
-	public static Quaternion fromAngleAxis(float ang, Vector3f axis) {
-		return new Quaternion().setFromAngleAxis(ang, axis);
-	}
-
-	public static Quaternion fromEulerXYZ(float[] angles) {
-		return new Quaternion().setFromEulerXYZ(angles);
-	}
-
-	public static Quaternion fromEulerXZY(float[] angles) {
-		return new Quaternion().setFromEulerXZY(angles);
-	}
-
-	public static Quaternion fromEulerYXZ(float[] angles) {
-		return new Quaternion().setFromEulerYXZ(angles);
-	}
-
-	public static Quaternion fromEulerYZX(float[] angles) {
-		return new Quaternion().setFromEulerYZX(angles);
-	}
-
-	public static Quaternion fromEulerZXY(float[] angles) {
-		return new Quaternion().setFromEulerZXY(angles);
-	}
-
-	public static Quaternion fromEulerZYX(float[] angles) {
-		return new Quaternion().setFromEulerZYX(angles);
 	}
 
 
